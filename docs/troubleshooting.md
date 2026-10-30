@@ -30,6 +30,9 @@
 | `uv run lerobot-calibrate` 报 `Failed to spawn` | 用模块方式 `uv run python -m lerobot.scripts.lerobot_calibrate ...`（本仓库脚本已用模块方式） |
 | `uv run python` 退化成 conda 的 python | 在仓库目录外执行。用 `uv run --project <lerobot目录>` 或先 `cd` |
 | 键盘按键没反应 | 点一下运行脚本的终端窗口获得焦点 |
+| 纯键盘模式下机械臂持续抖动 | 回写观测值时把总线坏包（实测 shoulder_pan 单帧跳 3.78°）当成了新目标反复下发。已内置「坏包拒绝 + EMA + 死区」三层滤波；仍抖可调 `ARM_HOLD_MAX_JUMP` / `ARM_HOLD_ALPHA=0.3` / `ARM_HOLD_DEADBAND=1.0`。若 rerun 画面也在抖，则是底盘机械振动，软件压不住 |
+| 纯键盘模式没弹可视化窗口 | 默认不开。加 `-Rerun`（PowerShell）或 `--rerun` / `SHOW_RERUN=1` |
+| Ctrl+C 退出后显示退出码 1 | rerun 接管 SIGINT 导致 `uv run` 返回非 0，不是故障（`teleop.ps1` 已友好处理） |
 | `Exceeded gRPC proxy server memory limit (1.0 GiB)` | rerun 图像日志过密。本仓库已把图像记录降到 5 FPS，可忽略 |
 | 连一会儿就断 | Wi-Fi 不稳。两台设备尽量靠近同一路由，或改用有线 |
 

@@ -167,6 +167,12 @@ powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1
 | `CLIENT_ID` | `my_lekiwi` | 控制端本地标识 |
 | `LEADER_PORT` | `COM11` | leader 串口（电脑端） |
 | `LEADER_ID` | `my_awesome_leader_arm` | leader 校准 ID |
+| `SLIM_VENV` | `1` | 板端瘦身（换 CPU torch + 清 CUDA），`0` 关闭 |
+| `ARM_HOLD_DEADBAND` | `0.5` | 纯键盘模式：回写死区（度），小于此变化不更新目标 |
+| `ARM_HOLD_ALPHA` | `0.6` | 纯键盘模式：EMA 平滑系数（越小越稳、越迟钝） |
+| `ARM_HOLD_MAX_JUMP` | `10.0` | 纯键盘模式：单帧跳变超过此值视为总线坏包并丢弃 |
+| `SHOW_RERUN` | `0` | `1` = 默认弹 rerun 可视化窗口 |
+| `MAX_RELATIVE_TARGET` | 空 | 单步最大变化量；留空不限 |
 
 > 想临时覆盖某个值：直接设同名环境变量即可（如 `ROBOT_PORT=/dev/ttyACM1 sh scripts/a1_host.sh start`）。
 

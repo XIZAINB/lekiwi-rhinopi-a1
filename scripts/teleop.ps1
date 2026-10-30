@@ -59,4 +59,12 @@ try {
 } finally {
     Pop-Location
 }
+
+if ($code -eq 0) { exit 0 }
+if ($code -eq 130 -or $code -eq 1) {
+    # Ctrl+C 会被 rerun 的 SIGINT 处理器接管，uv 因此返回非 0，不是故障
+    Write-Note "已退出（Ctrl+C 中断，退出码 $code，属正常）"
+    exit 0
+}
+Write-Bad "运行失败，退出码 $code"
 exit $code
