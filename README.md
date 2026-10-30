@@ -197,6 +197,8 @@ powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1
 | torch（板端） | `2.8.0+cpu`（瘦身后，`cuda_available: False`） |
 | uv | 0.13.6 |
 | 板端 venv 体积 | 848 MB（瘦身前 4.7 GB） |
+| leader 臂 | SO100 leader + CH343（`COM11`） |
+| 零点对齐实测 | 对齐前最大偏差 12.48°（`wrist_roll`）→ 对齐后**残差 0.13°** |
 | 电脑端 | Windows 11 + PowerShell 5.1 |
 
 > 版本矩阵以 `sh scripts/a1_bootstrap.sh` 末尾自检输出为准；升级 lerobot 前请先跑 T1~T4。
