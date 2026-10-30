@@ -18,8 +18,9 @@ $map = Read-LeKiwiEnv -RepoDir $RepoDir
 $lerobotDir = Get-LeKiwiSetting $map 'LEROBOT_DIR' (Join-Path $env:USERPROFILE 'lerobot')
 $boardIp = Get-LeKiwiSetting $map 'BOARD_IP' ''
 $boardUser = Get-LeKiwiSetting $map 'BOARD_USER' 'aidlux'
-$repoOnBoard = if ($BoardRepo) { $BoardRepo } else { Get-LeKiwiSetting $map 'BOARD_REPO' '~/lekiwi-rhinopi-a1' }
-# config/env 里习惯写 $HOME，这里统一换成 ~ 交给远端 shell 展开
+$repoOnBoard = if ($BoardRepo) { $BoardRepo } else { Get-LeKiwiSettingRaw $map 'BOARD_REPO' '~/lekiwi-rhinopi-a1' }
+# config/env 里习惯写 $HOME（板端路径），这里换成 ~ 交给远端 shell 展开
+# 注意：不能用 Get-LeKiwiSetting，它会把 $HOME 展开成 Windows 的 C:\Users\...
 $repoOnBoard = $repoOnBoard -replace '\$HOME', '~'
 $remote = "$boardUser@$boardIp"
 

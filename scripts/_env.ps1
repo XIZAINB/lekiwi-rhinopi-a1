@@ -43,6 +43,17 @@ function Get-LeKiwiSetting {
     return $Default
 }
 
+function Get-LeKiwiSettingRaw {
+    param(
+        [hashtable]$Map,
+        [Parameter(Mandatory)][string]$Key,
+        [string]$Default = ''
+    )
+    # 不做变量展开：用于“板端路径”这类值（如 $HOME/xxx），展开后就变成 Windows 路径了
+    if ($Map.ContainsKey($Key) -and $Map[$Key]) { return $Map[$Key] }
+    return $Default
+}
+
 function Set-LeKiwiEnvValue {
     param(
         [Parameter(Mandatory)][string]$Path,
