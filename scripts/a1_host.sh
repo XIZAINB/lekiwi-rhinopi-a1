@@ -14,7 +14,8 @@ LEROBOT_DIR=${LEROBOT_DIR:-$HOME/lerobot}
 PY="$LEROBOT_DIR/.venv/bin/python"
 LOG=${HOST_LOG:-$HOME/host.log}
 PIDFILE=${HOST_PIDFILE:-$HOME/host.pid}
-WAIT_S=${HOST_WAIT_S:-60}
+WAIT_S=${HOST_WAIT_S:-90}
+ZMQ_CMD_PORT=${ZMQ_CMD_PORT:-5555}
 
 # 用正则 [t] 规避 pkill/pgrep 匹配到自身命令行（这条踩过坑）
 PAT='a1_hos[t]\.py'
@@ -24,6 +25,14 @@ warn() { printf '  \033[33m[!]\033[0m %s\n' "$1"; }
 die()  { printf '  \033[31m[x]\033[0m %s\n' "$1"; exit 1; }
 
 running() { pgrep -f "$PAT" >/dev/null 2>&1; }
+
+# 就绪判定：端口在监听 = 真的就绪（日志级别/文案变了也不影响）
+ready() {
+    if command -v ss >/dev/null 2>&1 && ss -tln 2>/dev/null | grep -q ":$ZMQ_CMD_PORT "; then
+        return 0
+    fi
+    grep -qE 'Waiting for commands|No command available' "$LOG" 2>/dev/null
+}
 
 case "${1:-}" in
 start)
@@ -40,8 +49,8 @@ start)
 
     i=0
     while [ "$i" -lt "$((WAIT_S * 2))" ]; do
-        if grep -q 'Waiting for commands' "$LOG" 2>/dev/null; then
-            ok "host 就绪: Waiting for commands..."
+        if ready; then
+            ok "host 就绪（ZMQ 端口 $ZMQ_CMD_PORT 已监听）"
             grep -q 'Address already in use' "$LOG" 2>/dev/null && die "端口被占用，检查是否有残留 host"
             printf '  日志: %s\n' "$LOG"
             exit 0
@@ -54,7 +63,7 @@ start)
         sleep 0.5
         i=$((i + 1))
     done
-    warn "等待 ${WAIT_S}s 仍未看到 'Waiting for commands'，请查看日志"
+    warn "等待 ${WAIT_S}s 仍未就绪，请查看日志"
     tail -n 30 "$LOG" 2>/dev/null
     exit 1
     ;;

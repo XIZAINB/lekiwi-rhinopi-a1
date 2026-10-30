@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import builtins
+import logging
 import sys
 from pathlib import Path
 
@@ -69,6 +70,14 @@ def build_cameras() -> dict:
 
 
 def main() -> int:
+    # 上游用 logging.info 打印关键进度（"Waiting for commands..." 等），
+    # 默认 root 级别是 WARNING，后台运行时这些信息会全部丢掉，排障时很难受。
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
     robot_cfg = LeKiwiConfig(
         id=cfg("ROBOT_ID", "my_kiwi"),
         port=cfg("ROBOT_PORT", "/dev/ttyACM0"),

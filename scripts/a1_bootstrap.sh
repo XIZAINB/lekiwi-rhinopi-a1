@@ -114,6 +114,13 @@ printf '  验证 import ...\n'
     || die "import 失败，检查 $LEROBOT_DIR/.venv"
 ok "lerobot 可导入"
 
+# 瘦身：A1 没有 NVIDIA GPU，CUDA 依赖（~3.4 GB）纯属浪费。
+# 跳过设 SLIM_VENV=0（例如以后要在板上有 GPU 的机器上用）。
+if [ "${SLIM_VENV:-1}" = "1" ]; then
+    printf '\n  瘦身（换 CPU 版 torch，清理 CUDA）...\n'
+    sh "$REPO_DIR/scripts/a1_slim_venv.sh" || warn "瘦身失败，不影响使用（venv 会保持 CUDA 版）"
+fi
+
 chmod +x "$REPO_DIR"/scripts/*.sh 2>/dev/null || true
 
 # ---------------------------------------------------------------- 7. 自检

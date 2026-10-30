@@ -15,6 +15,9 @@
 | SSH 执行 `pkill -f lekiwi_host` 后连接被断 | 模式匹配到了 ssh 自己的命令行。用正则 `pkill -f 'lekiwi_hos[t]'`（本仓库脚本已内置） |
 | `pkill` 后机械臂推不动 | 强杀不走 `disconnect()`，扭矩没释放。跑 `sh scripts/a1_host.sh stop` 再 `release-torque` |
 | `uv sync` 在 ARM 上失败 | 多为 OpenCV 轮子缺失。先看报错是哪个包；可尝试 `uv sync --locked --extra lekiwi --no-build-isolation`，或改用发行版 `python3-opencv` |
+| `uv sync` 下了 3 GB 的 nvidia/cudnn | lerobot 的 pyproject 把 linux 的 torch 指向 CUDA 索引。跑 `sh scripts/a1_slim_venv.sh`（bootstrap 已默认执行），venv 从 4.7 GB 降到 848 MB |
+| 删了 nvidia 包后 `import torch` 报 `libcudart.so.13: cannot open shared object file` | CUDA 版 torch 的库被删了。**不能只删**，必须换成 CPU 版：`sh scripts/a1_slim_venv.sh` |
+| `a1_host.sh start` 报“未就绪”但日志已有 `No command available` | 旧版本拿 `Waiting for commands` 当唯一判据，而它是 `logging.info`、默认不输出。现改为「端口 5555 监听优先」，并已把日志级别改为 INFO |
 | `uv: command not found` | `~/.local/bin` 不在 PATH：`export PATH="$HOME/.local/bin:$PATH"` |
 | `No module named 'lerobot'` | 在仓库目录外跑了 python。用 `.venv/bin/python` 或先 `cd` 到 lerobot 目录（本仓库脚本已处理） |
 

@@ -72,6 +72,10 @@ cp config/env.example config/env
 vi config/env          # 至少填 CAMERA_WRIST（可先跑 sh scripts/a1_detect.sh 得到建议值）
 ```
 
+> 脚本会自动做「瘦身」：把 CUDA 版 torch 换成 CPU 版并清掉 `nvidia`/`cuda`/`triton`。
+> A1 没有 NVIDIA GPU，不瘦身的话 `uv sync` 会多下 ~3.4 GB。
+> 实测 venv 从 **4.7 GB → 848 MB**，遥操作不受影响。跳过瘦身：`SLIM_VENV=0 sh scripts/a1_bootstrap.sh`。
+
 第一次必须先校准 follower（交互式，会提示你怎么摆臂）：
 
 ```bash
@@ -182,8 +186,11 @@ powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1
 | 组件 | 版本 |
 | --- | --- |
 | lerobot | commit `53feaef` |
-| 板卡 | 犀牛派 A1（AidLux，aarch64） |
-| Python（板端） | 由 `uv` 管理（见 `a1_bootstrap.sh` 输出） |
+| 板卡 | 犀牛派 A1（Ubuntu 24.04.3 / 内核 6.6.65-qli，aarch64） |
+| Python（板端） | 3.12.3（由 `uv` 管理） |
+| torch（板端） | `2.8.0+cpu`（瘦身后，`cuda_available: False`） |
+| uv | 0.13.6 |
+| 板端 venv 体积 | 848 MB（瘦身前 4.7 GB） |
 | 电脑端 | Windows 11 + PowerShell 5.1 |
 
 > 版本矩阵以 `sh scripts/a1_bootstrap.sh` 末尾自检输出为准；升级 lerobot 前请先跑 T1~T4。
