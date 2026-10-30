@@ -1,0 +1,14 @@
+# 统一换行符：Linux 脚本必须是 LF，否则板上会报
+#   /bin/sh^M: bad interpreter
+* text=auto eol=lf
+
+*.sh   text eol=lf
+*.py   text eol=lf
+*.md   text eol=lf
+*.example text eol=lf
+*.gitignore text eol=lf
+
+# PowerShell 脚本保持 CRLF（且必须 UTF-8 with BOM，见 docs/troubleshooting.md）
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf

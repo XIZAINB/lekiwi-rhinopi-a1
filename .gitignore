@@ -1,0 +1,17 @@
+# 本地配置（含 IP / 串口等机器相关信息）
+config/env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 日志
+*.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
