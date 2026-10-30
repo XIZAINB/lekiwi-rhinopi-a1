@@ -81,10 +81,14 @@ def main() -> int:
         force=True,
     )
 
+    max_rel_raw = cfg_optional("MAX_RELATIVE_TARGET")
+    max_rel = float(max_rel_raw) if max_rel_raw else None
+
     robot_cfg = LeKiwiConfig(
         id=cfg("ROBOT_ID", "my_kiwi"),
         port=cfg("ROBOT_PORT", "/dev/ttyACM0"),
         cameras=build_cameras(),
+        max_relative_target=max_rel,
     )
     host_cfg = LeKiwiHostConfig(
         port_zmq_cmd=cfg_int("ZMQ_CMD_PORT", 5555),

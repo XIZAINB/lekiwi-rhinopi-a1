@@ -3,7 +3,8 @@
 #   powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1               # leader 臂 + 键盘底盘
 #   powershell -ExecutionPolicy Bypass -File scripts\teleop.ps1 -Keyboard     # 仅键盘（无 leader 臂）
 param(
-    [switch]$Keyboard
+    [switch]$Keyboard,
+    [switch]$Rerun
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,7 +52,9 @@ Write-Host ''
 
 Push-Location $lerobotDir
 try {
-    & uv run python $script
+    $pyArgs = @($script)
+    if ($Rerun -and $Keyboard) { $pyArgs += '--rerun' }
+    & uv run python @pyArgs
     $code = $LASTEXITCODE
 } finally {
     Pop-Location
