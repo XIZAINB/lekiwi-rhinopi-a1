@@ -31,7 +31,7 @@ from lerobot.robots.lekiwi.lekiwi import LeKiwi  # noqa: E402
 from lerobot.robots.lekiwi.lekiwi_host import LeKiwiServerConfig, main as host_main  # noqa: E402
 
 ROTATIONS = {
-    0: Cv2Rotation.ROTATE_0,
+    0: Cv2Rotation.NO_ROTATION,
     90: Cv2Rotation.ROTATE_90,
     180: Cv2Rotation.ROTATE_180,
     270: Cv2Rotation.ROTATE_270,
